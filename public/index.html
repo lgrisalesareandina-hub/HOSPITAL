@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hospital ODS 3 - Gestión de pacientes</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="lateral">
+    <h1 class="marca">Hospital<br>ODS 3</h1>
+    <p class="lema">Salud y bienestar</p>
+    <nav aria-label="Secciones">
+      <a href="#pacientes" data-vista="pacientes">Pacientes</a>
+      <a href="#citas" data-vista="citas">Citas</a>
+      <a href="#historias" data-vista="historias">Historias clínicas</a>
+      <a href="#auditoria" data-vista="auditoria">Auditoría</a>
+    </nav>
+    <p class="pie-lateral">Los datos se guardan en PostgreSQL y se leen como objetos mediante un ORM.</p>
+  </aside>
+
+  <main>
+    <div id="aviso" class="aviso oculto" role="status" aria-live="polite"></div>
+
+    <!-- PACIENTES -->
+    <section id="vista-pacientes" class="vista">
+      <header class="encabezado"><h2>Pacientes</h2><p id="cuenta-pacientes" class="cuenta"></p></header>
+      <div class="cuerpo">
+        <div class="tabla-envoltura">
+          <table>
+            <thead><tr><th>Documento</th><th>Paciente</th><th>Nacimiento</th><th>EPS</th><th>Acciones</th></tr></thead>
+            <tbody id="tabla-pacientes"></tbody>
+          </table>
+        </div>
+        <form id="form-paciente" class="formulario" novalidate>
+          <h3 id="titulo-paciente">Registrar paciente</h3>
+          <input type="hidden" name="idPaciente">
+          <label for="p-documento">Documento</label>
+          <input id="p-documento" name="documento" maxlength="20" required autocomplete="off">
+          <label for="p-nombres">Nombres</label>
+          <input id="p-nombres" name="nombres" maxlength="80" required autocomplete="off">
+          <label for="p-apellidos">Apellidos</label>
+          <input id="p-apellidos" name="apellidos" maxlength="80" required autocomplete="off">
+          <label for="p-nacimiento">Fecha de nacimiento</label>
+          <input id="p-nacimiento" name="fechaNacimiento" type="date" required>
+          <label for="p-sexo">Sexo</label>
+          <select id="p-sexo" name="sexo" required>
+            <option value="">Seleccione</option><option value="F">Femenino</option><option value="M">Masculino</option>
+          </select>
+          <label for="p-telefono">Teléfono</label>
+          <input id="p-telefono" name="telefono" maxlength="20" autocomplete="off">
+          <label for="p-direccion">Dirección</label>
+          <input id="p-direccion" name="direccion" maxlength="120" autocomplete="off">
+          <label for="p-eps">EPS</label>
+          <input id="p-eps" name="eps" maxlength="80" autocomplete="off">
+          <div class="acciones">
+            <button type="submit" id="guardar-paciente">Guardar paciente</button>
+            <button type="button" id="cancelar-paciente" class="secundario oculto">Cancelar edición</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- CITAS -->
+    <section id="vista-citas" class="vista oculto">
+      <header class="encabezado"><h2>Citas</h2><p id="cuenta-citas" class="cuenta"></p></header>
+      <div class="cuerpo">
+        <div class="tabla-envoltura">
+          <table>
+            <thead><tr><th>Fecha y hora</th><th>Paciente</th><th>Médico</th><th>Motivo</th><th>Estado</th></tr></thead>
+            <tbody id="tabla-citas"></tbody>
+          </table>
+        </div>
+        <form id="form-cita" class="formulario" novalidate>
+          <h3>Programar cita</h3>
+          <label for="c-paciente">Paciente</label>
+          <select id="c-paciente" name="idPaciente" required></select>
+          <label for="c-medico">Médico</label>
+          <select id="c-medico" name="idMedico" required></select>
+          <label for="c-fecha">Fecha y hora</label>
+          <input id="c-fecha" name="fechaHora" type="datetime-local" required>
+          <label for="c-motivo">Motivo de la consulta</label>
+          <input id="c-motivo" name="motivo" maxlength="200" autocomplete="off">
+          <div class="acciones"><button type="submit">Programar cita</button></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- HISTORIAS -->
+    <section id="vista-historias" class="vista oculto">
+      <header class="encabezado"><h2>Historias clínicas</h2><p id="cuenta-historias" class="cuenta"></p></header>
+      <div class="cuerpo">
+        <div class="tabla-envoltura">
+          <table>
+            <thead><tr><th>Paciente</th><th>Médico</th><th>Diagnóstico</th><th>Tratamiento</th><th>Fórmula</th></tr></thead>
+            <tbody id="tabla-historias"></tbody>
+          </table>
+        </div>
+        <div class="columna-formularios">
+          <form id="form-historia" class="formulario" novalidate>
+            <h3>Registrar historia clínica</h3>
+            <label for="h-cita">Cita atendida</label>
+            <select id="h-cita" name="idCita" required></select>
+            <label for="h-sintomas">Síntomas</label>
+            <input id="h-sintomas" name="sintomas" maxlength="300" autocomplete="off">
+            <label for="h-diagnostico">Diagnóstico</label>
+            <input id="h-diagnostico" name="diagnostico" maxlength="300" required autocomplete="off">
+            <label for="h-tratamiento">Tratamiento</label>
+            <input id="h-tratamiento" name="tratamiento" maxlength="300" autocomplete="off">
+            <div class="acciones"><button type="submit">Registrar historia</button></div>
+          </form>
+          <form id="form-formula" class="formulario" novalidate>
+            <h3>Agregar fórmula</h3>
+            <label for="f-historia">Historia clínica</label>
+            <select id="f-historia" name="idHistoria" required></select>
+            <label for="f-medicamento">Medicamento</label>
+            <select id="f-medicamento" name="idMedicamento" required></select>
+            <label for="f-dosis">Dosis</label>
+            <input id="f-dosis" name="dosis" maxlength="80" required autocomplete="off">
+            <label for="f-dias">Duración en días</label>
+            <input id="f-dias" name="duracionDias" type="number" min="1" max="365" required>
+            <div class="acciones"><button type="submit">Agregar fórmula</button></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- AUDITORIA -->
+    <section id="vista-auditoria" class="vista oculto">
+      <header class="encabezado"><h2>Auditoría</h2><p id="cuenta-auditoria" class="cuenta"></p></header>
+      <p class="nota">Cada vez que alguien modifica o borra una historia clínica, la base de datos lo anota aquí con el usuario y la hora.</p>
+      <div class="tabla-envoltura">
+        <table>
+          <thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Acción</th><th>Tabla</th></tr></thead>
+          <tbody id="tabla-auditoria"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
